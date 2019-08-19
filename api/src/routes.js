@@ -1,16 +1,9 @@
 const express = require('express');
+const DevController = require('./controllers/DevController');
+
 const routes = express.Router();
 
-routes.get('/', (req, res) => {
-  res.json({
-    message: 'Ola mundo'
-  });
-});
-
-routes.post('/devs', (req, res) => {
-  return res.json({
-    ok: true
-  });
-});
+// criar um novo dev
+routes.post('/devs', DevController.store);
 
 module.exports = routes;
