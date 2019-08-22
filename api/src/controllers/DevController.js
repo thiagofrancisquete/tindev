@@ -2,6 +2,23 @@ const axios = require('axios');
 const Dev = require('../models/Dev');
 
 module.exports = {
+  // listando os devs do banco
+  async index(req, res) {
+    const { user } = req.headers;
+
+    const loggedDev = await Dev.findById(user); // todos os dados do usuario logado
+
+    // filtros de busca de devs na timeline
+    const users = await Dev.find({
+      $and: [
+        { _id: { $ne: user } }, // excluindo o proprio user da listagem => ne = not equal
+        { _id: { $nin: loggedDev.likes } }, // excluindo os devs que ja receberam like => nin = not in
+        { _id: { $nin: loggedDev.dislikes } } // excluindo quem recebeu dislike
+      ]
+    });
+    return res.json(users);
+  },
+
   async store(req, res) {
     const { username } = req.body;
 
